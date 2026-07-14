@@ -13,6 +13,8 @@ class Recorder:
         self._chunks: list[np.ndarray] = []
         self._stream: sd.InputStream | None = None
         self._lock = threading.Lock()
+        # Optional callback fed the RMS level of each chunk (for UI meters).
+        self.on_level = None
 
     @property
     def recording(self) -> bool:
@@ -27,12 +29,16 @@ class Recorder:
                 samplerate=SAMPLE_RATE,
                 channels=1,
                 dtype="float32",
+                blocksize=800,  # 50ms chunks -> 20 level updates/s for the UI meter
                 callback=self._on_audio,
             )
             self._stream.start()
 
     def _on_audio(self, indata, frames, time_info, status) -> None:
-        self._chunks.append(indata[:, 0].copy())
+        chunk = indata[:, 0].copy()
+        self._chunks.append(chunk)
+        if self.on_level is not None:
+            self.on_level(float(np.sqrt(np.mean(chunk**2))))
 
     def stop(self) -> np.ndarray:
         """Stop capture and return the recorded audio as 1-D float32."""

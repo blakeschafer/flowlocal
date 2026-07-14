@@ -8,6 +8,7 @@ from AppKit import NSOperationQueue
 
 from . import cleanup, config, paster
 from .hotkey import HotkeyListener
+from .overlay import Overlay
 from .recorder import Recorder
 from .transcriber import Transcriber
 
@@ -22,6 +23,8 @@ class FlowLocalApp(rumps.App):
         super().__init__("FlowLocal", title=ICON_LOADING, quit_button="Quit FlowLocal")
         self.cfg = config.load()
         self.recorder = Recorder()
+        self.overlay = Overlay()
+        self.recorder.on_level = self.overlay.push_level
         self.transcriber = Transcriber(self.cfg["model"], self.cfg["language"])
         self.model_ready = False
 
@@ -66,14 +69,17 @@ class FlowLocalApp(rumps.App):
         if not self.model_ready:
             return
         self.recorder.start()
+        self.overlay.show_recording()
         self._set_title(ICON_RECORDING)
 
     def abort_recording(self) -> None:
         self.recorder.abort()
+        self.overlay.hide()
         self._set_title(ICON_IDLE)
 
     def finish_recording(self) -> None:
         audio = self.recorder.stop()
+        self.overlay.show_processing()
         self._set_title(ICON_BUSY)
         threading.Thread(target=self._process, args=(audio,), daemon=True).start()
 
@@ -88,6 +94,7 @@ class FlowLocalApp(rumps.App):
         except Exception as exc:
             print(f"FlowLocal: dictation failed: {exc}", file=sys.stderr)
         finally:
+            self.overlay.hide()
             self._set_title(ICON_IDLE)
 
     # -- menu ---------------------------------------------------------------
