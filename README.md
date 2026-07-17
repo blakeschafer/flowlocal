@@ -4,6 +4,17 @@ Private, on-device voice dictation for macOS and Windows. Hold a hotkey, speak, 
 
 A local, open-source alternative to Wispr Flow: **zero network calls, zero subscription, free forever**. Your voice never leaves your Mac.
 
+<table align="center">
+  <tr>
+    <td align="center"><img src="docs/pill-recording.png" width="250" alt="Recording pill with live waveform"></td>
+    <td align="center"><img src="docs/pill-processing.png" width="250" alt="Pill while transcribing"></td>
+  </tr>
+  <tr>
+    <td align="center"><em>Hold the hotkey and speak — live waveform</em></td>
+    <td align="center"><em>Release — transcribing, then it pastes</em></td>
+  </tr>
+</table>
+
 ## How it works
 
 ```
@@ -35,7 +46,9 @@ cd flowlocal
 
 The installer sets up the Python environment, pulls the cleanup model if Ollama is present, and registers a LaunchAgent so FlowLocal **starts at every login and restarts if it crashes** — install once, never think about it again.
 
-A 🎙 appears in the menu bar (⏳ while the Whisper model downloads — first run only, ~1.6GB).
+A 🎙 appears in the menu bar (⏳ while the Whisper model downloads — first run only, ~1.6GB):
+
+<img src="docs/menubar.png" width="200" alt="FlowLocal idle in the macOS menu bar">
 
 ### One-time permissions
 
