@@ -2,6 +2,7 @@
 so it exercises the real Whisper model without a microphone."""
 
 import subprocess
+import sys
 import wave
 from pathlib import Path
 
@@ -76,6 +77,7 @@ def test_too_short_returns_empty(transcriber):
     assert transcriber.transcribe(blip) == ""
 
 
+@pytest.mark.skipif(sys.platform != "darwin", reason="uses the macOS `say` TTS engine")
 def test_transcribes_synthesized_speech(transcriber, tmp_path):
     audio = synth_speech(
         "The quick brown fox jumps over the lazy dog", tmp_path)

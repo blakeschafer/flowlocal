@@ -21,6 +21,9 @@ _APP_TONES = {
     "terminal": "technical; keep identifiers, commands, and code terms verbatim",
     "iterm": "technical; keep identifiers, commands, and code terms verbatim",
     "xcode": "technical; keep identifiers, commands, and code terms verbatim",
+    "visual studio": "technical; keep identifiers, commands, and code terms verbatim",
+    "powershell": "technical; keep identifiers, commands, and code terms verbatim",
+    "teams": "professional but conversational",
 }
 
 _SYSTEM_PROMPT = """You clean up voice-dictation transcripts. Rules:

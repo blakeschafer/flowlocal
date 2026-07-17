@@ -1,16 +1,21 @@
 """User config, stored at ~/.flowlocal/config.json."""
 
 import json
+import sys
 from pathlib import Path
 
 CONFIG_DIR = Path.home() / ".flowlocal"
 CONFIG_PATH = CONFIG_DIR / "config.json"
 
+_IS_MAC = sys.platform == "darwin"
+
 DEFAULTS = {
-    # pynput key name: "alt_r" = right Option. Also accepts "cmd_r", "ctrl_r", "f13", etc.
-    "hotkey": "alt_r",
-    # Any mlx-community whisper repo. large-v3-turbo is the best speed/accuracy on M-series.
-    "model": "mlx-community/whisper-large-v3-turbo",
+    # pynput key name. Right Option on macOS; right Ctrl on Windows (right Alt
+    # is AltGr on many layouts). Also accepts "cmd_r", "f13", etc.
+    "hotkey": "alt_r" if _IS_MAC else "ctrl_r",
+    # macOS: any mlx-community whisper repo (runs on the Apple GPU).
+    # Windows: any faster-whisper model name ("large-v3-turbo", "small", ...).
+    "model": "mlx-community/whisper-large-v3-turbo" if _IS_MAC else "large-v3-turbo",
     # None = autodetect. Set to "en" to lock language and speed up decoding.
     "language": None,
     "cleanup": {
