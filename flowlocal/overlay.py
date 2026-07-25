@@ -112,6 +112,11 @@ class Overlay:
 
     # -- state changes (safe from any thread) ---------------------------------
 
+    def warm_up(self) -> None:
+        """Build the panel ahead of time so the first dictation doesn't race
+        window construction against a possibly very short recording."""
+        _on_main(self._ensure_panel)
+
     def show_recording(self) -> None:
         def apply():
             self._ensure_panel()
@@ -122,6 +127,7 @@ class Overlay:
             self._label.setStringValue_("")
             self._position()
             self._panel.orderFrontRegardless()
+            self._panel.display()  # force an immediate compositor flush
         _on_main(apply)
 
     def show_processing(self) -> None:
@@ -132,6 +138,7 @@ class Overlay:
             self._label.setStringValue_("• • •")
             self._position()
             self._panel.orderFrontRegardless()
+            self._panel.display()  # force an immediate compositor flush
         _on_main(apply)
 
     def hide(self) -> None:

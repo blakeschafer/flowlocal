@@ -51,6 +51,7 @@ class FlowLocalApp(rumps.App):
         NSOperationQueue.mainQueue().addOperationWithBlock_(apply)
 
     def _warm_up(self) -> None:
+        self.overlay.warm_up()  # build the panel now, not on the first dictation
         if self.cfg["cleanup"]["enabled"]:
             threading.Thread(
                 target=cleanup.warm_up, args=(self.cfg["cleanup"],), daemon=True
